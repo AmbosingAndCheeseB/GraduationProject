@@ -1,19 +1,13 @@
-from bs4 import BeautifulSoup
 import requests
+from bs4 import BeautifulSoup
 
+req = requests.get('http://www.weather.go.kr/weather/climate/past_cal.jsp?stn=108&yy=2019&mm=3&x=8&y=7&obs=1')
 
-def get_html(url):
-    _html = ""
-    resp = requests.get(url)
-    if resp.status_code == 200:
-        _html = resp.text
-    return _html
+html = req.text
+header = req.headers
+status = req.status_code
+is_ok = req.ok
 
-
-web_url = 'https://www.google.com/'
-
-html = get_html(web_url)
-
-soup = BeautifulSoup(html.text, 'html.parser')
+soup = BeautifulSoup(html, 'html.parser')
 
 print(soup)
