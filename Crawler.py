@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from openpyxl import Workbook
 
-req = requests.get('http://www.weather.go.kr/weather/climate/past_cal.jsp?stn=108&yy=2019&mm=3&x=23&y=12&obs=1')
+req = requests.get('http://www.weather.go.kr/weather/climate/past_cal.jsp?stn=108&yy=2019&mm=1&x=14&y=10&obs=1')
 
 if req.ok:
     html = req.text
