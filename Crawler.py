@@ -1,13 +1,22 @@
 import requests
 from bs4 import BeautifulSoup
+from openpyxl import Workbook
 
-req = requests.get('http://www.weather.go.kr/weather/climate/past_cal.jsp?stn=108&yy=2019&mm=3&x=8&y=7&obs=1')
+req = requests.get('http://www.weather.go.kr/weather/climate/past_cal.jsp?stn=108&yy=2019&mm=3&x=23&y=12&obs=1')
 
-html = req.text
-header = req.headers
-status = req.status_code
-is_ok = req.ok
+if req.ok:
+    html = req.text
+    soup = BeautifulSoup(html, 'html.parser')
 
-soup = BeautifulSoup(html, 'html.parser')
+wb = Workbook()
+sheet1 = wb.active
 
-print(soup)
+weather = soup.select('td.align_left')
+
+i = 1
+for x in weather:
+    txt = x.text
+    sheet1.cell(i, 1, txt[5:9])
+    i = i+1
+
+wb.save('./crawler.xlsx')
