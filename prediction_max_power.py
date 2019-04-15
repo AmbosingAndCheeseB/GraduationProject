@@ -1,8 +1,9 @@
 import tensorflow as tf
 import numpy as np
 import pandas as pd
+from matplotlib import pyplot as plt
 
-#랜덤으로 정해도 시드를 정하면 어떤 시드의 가중치가 제일 좋은지 알 수 있음
+# 랜덤으로 정해도 시드를 정하면 어떤 시드의 가중치가 제일 좋은지 알 수 있음
 tf.set_random_seed(77)
 
 x_data = pd.read_csv('./Train_X.csv')
@@ -17,7 +18,7 @@ feature_test = x_test.as_matrix().astype('float32')
 label_test = y_test.as_matrix().astype('float32')
 
 
-#초기값들 설정
+# 초기값들 설정
 learning_rate = 0.0005
 num_epoch = 10000
 batch_size = 100
@@ -31,12 +32,12 @@ dataset = dataset.shuffle(buffer_size=(int(len(x_data) * 0.4) + 3*batch_size)).b
 iterator = dataset.make_initializable_iterator()
 next_data = iterator.get_next()
 
-#신경망 학습 데이터 변수 생성
+# 신경망 학습 데이터 변수 생성
 x = tf.placeholder(tf.float32, shape=[None, feature.shape[1]])
 y = tf.placeholder(tf.float32, shape=[None, label.shape[1]])
 
 
-#ANN 신경망 모델 구현
+# ANN 신경망 모델 구현
 def model_ANN(x):
     W1 = tf.Variable(tf.random_normal(shape=[feature.shape[1], hidden1_size]))
     b1 = tf.Variable(tf.random_normal(shape=[hidden1_size]))
@@ -50,11 +51,11 @@ def model_ANN(x):
 
     return logit
 
+
 pre_value=model_ANN(x)
 
 loss = tf.reduce_mean(tf.square(y-pre_value))
 train = tf.train.RMSPropOptimizer(learning_rate=learning_rate).minimize(loss)
-
 
 
 with tf.Session() as sess:
@@ -62,7 +63,7 @@ with tf.Session() as sess:
 
     for epoch in range(num_epoch):
         average_loss = 0
-        sess.run(iterator.initializer, feed_dict = {x:feature})
+        sess.run(iterator.initializer, feed_dict={x: feature})
 
         while True:
             try:
@@ -76,6 +77,21 @@ with tf.Session() as sess:
         if epoch % display_step == 0:
             print("Epoch : %d, loss : %f" % ((epoch+1), current_loss))
 
-    pre_val, y1 = sess.run([pre_value,y], feed_dict={x:feature_test, y:label_test})
-    for i in range(10):
+    pre_val, y1 = sess.run([pre_value, y], feed_dict={x: feature_test, y: label_test})
+
+    row = np.arange(1, 101)  # 그래프 가로축 범위
+    col1 = []
+    col2 = []  # 그래프값 저장할 리스트
+
+    for i in range(100):
         print("예측값 : %d, 실제 값 : %d" % (pre_val[i], y1[i]))
+        col1.extend(pre_val[i])
+        col2.extend(y1[i])  # 그래프 리스트에 결과값 추가
+
+    # 그래프 그리기 #
+    plt.plot(row, col1, 'r', label='Predict')
+    plt.plot(row, col2, 'b', label='Real')
+    plt.legend()
+    plt.xlabel('Epoch')
+    plt.ylabel('Value')
+    plt.show()
