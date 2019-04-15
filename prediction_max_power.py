@@ -2,6 +2,8 @@ import tensorflow as tf
 import numpy as np
 import pandas as pd
 
+#랜덤으로 정해도 시드를 정하면 어떤 시드의 가중치가 제일 좋은지 알 수 있음
+tf.set_random_seed(77)
 
 x_data = pd.read_csv('./Train_X.csv')
 y_data = pd.read_csv('./Train_Y.csv')
@@ -16,7 +18,7 @@ label_test = y_test.as_matrix().astype('float32')
 
 
 #초기값들 설정
-learning_rate = 0.00005
+learning_rate = 0.0005
 num_epoch = 10000
 batch_size = 100
 display_step = 10
@@ -24,7 +26,7 @@ hidden1_size = 5
 hidden2_size = 5
 
 dataset = tf.data.Dataset.from_tensor_slices((feature, label))
-dataset = dataset.batch((batch_size))
+dataset = dataset.shuffle(buffer_size=(int(len(x_data) * 0.4) + 3*batch_size)).batch(batch_size)
 
 iterator = dataset.make_initializable_iterator()
 next_data = iterator.get_next()
@@ -51,7 +53,7 @@ def model_ANN(x):
 pre_value=model_ANN(x)
 
 loss = tf.reduce_mean(tf.square(y-pre_value))
-train = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss)
+train = tf.train.RMSPropOptimizer(learning_rate=learning_rate).minimize(loss)
 
 
 
@@ -76,6 +78,4 @@ with tf.Session() as sess:
 
     pre_val, y1 = sess.run([pre_value,y], feed_dict={x:feature_test, y:label_test})
     for i in range(10):
-
         print("예측값 : %d, 실제 값 : %d" % (pre_val[i], y1[i]))
-
