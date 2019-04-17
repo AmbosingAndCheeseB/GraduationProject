@@ -72,8 +72,8 @@ with tf.Session() as sess:
     ckpt_question = input("파라미터를 불러오시겠습니까?(Y/y) ")
 
     if ckpt_question in "y" or ckpt_question in "Y":
-        if ckpt and ckpt.model_check_path:
-            saver.restore(sess, ckpt.model_check_path)
+        if ckpt and ckpt.model_checkpoint_path:
+            saver.restore(sess, ckpt.model_checkpoint_path)
         else:
             print("저장된 가중치 파라미터가 읍슴다")
 
@@ -102,14 +102,20 @@ with tf.Session() as sess:
     col1 = []
     col2 = []  # 그래프값 저장할 리스트
 
+    f = open("학습결과.txt", 'w')
+
     avg = 0
     for i in range(100):
         print("예측값 : %d, 실제 값 : %d" % (pre_val[i], y1[i]))
+        f.write("예측값 : %d, 실제 값 : %d \n" % (pre_val[i], y1[i]))
         col1.extend(pre_val[i])
         col2.extend(y1[i])  # 그래프 리스트에 결과값 추가
         avg = avg + abs(y1[i] - pre_val[i]) / y1[i]  # 평균 오차율
 
     print("평균 오차율 : %0.2f %%" % avg)
+    f.write("\n평균 오차율 : %0.2f %%" % avg)
+
+    f.close()
 
     # 그래프 그리기 #
     plt.plot(row, col1, 'r', label='Predict')
