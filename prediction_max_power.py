@@ -7,7 +7,8 @@ from matplotlib import pyplot as plt
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 # 랜덤으로 정해도 시드를 정하면 어떤 시드의 가중치가 제일 좋은지 알 수 있음
-tf.set_random_seed(1)
+seed = 1
+tf.set_random_seed(seed)
 
 x_data = pd.read_csv('./Train_X.csv')
 y_data = pd.read_csv('./Train_Y.csv')
@@ -23,11 +24,12 @@ label_test = y_test.as_matrix().astype('float32')
 
 # 초기값들 설정
 learning_rate = 0.0005
-num_epoch = 20000
+num_epoch = 200
 batch_size = 100
 display_step = 10
 hidden1_size = 5
 hidden2_size = 5
+hidden_depth = 2
 
 dataset = tf.data.Dataset.from_tensor_slices((feature, label))
 dataset = dataset.shuffle(buffer_size=100000).batch(batch_size)
@@ -38,7 +40,7 @@ next_data = iterator.get_next()
 # 신경망 학습 데이터 변수 생성
 x = tf.placeholder(tf.float32, shape=[None, feature.shape[1]])
 y = tf.placeholder(tf.float32, shape=[None, label.shape[1]])
-keep_prob = tf.placeholder("float")
+
 
 
 # ANN 신경망 모델 구현
@@ -69,7 +71,7 @@ ckpt = tf.train.get_checkpoint_state(saver_dir)
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
 
-    ckpt_question = input("파라미터를 불러오시겠습니까?(Y/y) ")
+    ckpt_question = input("파라미터를 불러오시겠습니까?(Y/N) ")
 
     if ckpt_question in "y" or ckpt_question in "Y":
         if ckpt and ckpt.model_checkpoint_path:
@@ -85,7 +87,7 @@ with tf.Session() as sess:
             try:
                 next_x, next_y = sess.run(next_data)
 
-                _, current_loss = sess.run([train, loss], feed_dict={x: next_x, y: next_y, keep_prob: 0.8})
+                _, current_loss = sess.run([train, loss], feed_dict={x: next_x, y: next_y})
 
             except tf.errors.OutOfRangeError:
                 break
@@ -102,18 +104,20 @@ with tf.Session() as sess:
     col1 = []
     col2 = []  # 그래프값 저장할 리스트
 
-    f = open("학습결과.txt", 'w')
+    f = open("학습결과.txt", 'a')
+    f.write("Seed: %d\n학습률: %0.4f\nEpoch: %d\n은닉층 깊이: %d\n은닉층 노드수: %d, %d\n\n"
+            % (seed, learning_rate, num_epoch, hidden_depth, hidden1_size, hidden2_size))
 
     avg = 0
     for i in range(100):
         print("예측값 : %d, 실제 값 : %d" % (pre_val[i], y1[i]))
-        f.write("예측값 : %d, 실제 값 : %d \n" % (pre_val[i], y1[i]))
         col1.extend(pre_val[i])
         col2.extend(y1[i])  # 그래프 리스트에 결과값 추가
         avg = avg + abs(y1[i] - pre_val[i]) / y1[i]  # 평균 오차율
 
     print("평균 오차율 : %0.2f %%" % avg)
-    f.write("\n평균 오차율 : %0.2f %%" % avg)
+    f.write("평균 오차율 : %0.2f %%" % avg)
+    f.write("\n----------------------------\n")
 
     f.close()
 
