@@ -4,8 +4,10 @@ import pandas as pd
 import os
 from matplotlib import pyplot as plt
 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
 # 랜덤으로 정해도 시드를 정하면 어떤 시드의 가중치가 제일 좋은지 알 수 있음
-tf.set_random_seed(100)
+tf.set_random_seed(1)
 
 x_data = pd.read_csv('./Train_X.csv')
 y_data = pd.read_csv('./Train_Y.csv')
@@ -28,7 +30,7 @@ hidden1_size = 5
 hidden2_size = 5
 
 dataset = tf.data.Dataset.from_tensor_slices((feature, label))
-dataset = dataset.shuffle(buffer_size=(int(len(x_data) * 0.4) + 3*batch_size)).batch(batch_size)
+dataset = dataset.shuffle(buffer_size=100000).batch(batch_size)
 
 iterator = dataset.make_initializable_iterator()
 next_data = iterator.get_next()
@@ -36,6 +38,7 @@ next_data = iterator.get_next()
 # 신경망 학습 데이터 변수 생성
 x = tf.placeholder(tf.float32, shape=[None, feature.shape[1]])
 y = tf.placeholder(tf.float32, shape=[None, label.shape[1]])
+keep_prob = tf.placeholder("float")
 
 
 # ANN 신경망 모델 구현
@@ -75,14 +78,14 @@ with tf.Session() as sess:
             print("저장된 가중치 파라미터가 읍슴다")
 
     for epoch in range(num_epoch):
-
+        average_loss = 0
         sess.run(iterator.initializer, feed_dict={x: feature})
 
         while True:
             try:
                 next_x, next_y = sess.run(next_data)
 
-                _, current_loss = sess.run([train, loss], feed_dict={x: next_x, y: next_y})
+                _, current_loss = sess.run([train, loss], feed_dict={x: next_x, y: next_y, keep_prob: 0.8})
 
             except tf.errors.OutOfRangeError:
                 break
