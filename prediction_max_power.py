@@ -24,7 +24,7 @@ label_test = y_test.as_matrix().astype('float32')
 
 # 초기값들 설정
 learning_rate = 0.0005
-num_epoch = 200
+num_epoch = 20000
 batch_size = 100
 display_step = 10
 hidden1_size = 5
