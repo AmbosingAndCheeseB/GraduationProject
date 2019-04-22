@@ -6,8 +6,7 @@ from matplotlib import pyplot as plt
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-# 랜덤으로 정해도 시드를 정하면 어떤 시드의 가중치가 제일 좋은지 알 수 있음
-seed = 7777
+seed = 1
 tf.set_random_seed(seed)
 
 x_data = pd.read_csv('./Train_X.csv')
@@ -100,28 +99,27 @@ with tf.Session() as sess:
 
         pre_val, y1 = sess.run([pre_value, y], feed_dict={x: feature_test, y: label_test})
 
-    row = np.arange(1, 101)  # 그래프 가로축 범위
+    row = np.arange(1, 101)  # 테스트 데이터 추가 시 변경
     col1 = []
-    col2 = []  # 그래프값 저장할 리스트
+    col2 = []
 
-    f = open("./학습 결과/노드수 변경.txt", 'a')
-    f.write("Seed: %d\n학습률: %0.4f\nEpoch: %d\n은닉층 깊이: %d\n은닉층 노드수: %d, %d\n옵티마이저: RMSprop\n\n"
+    f = open("./학습 결과/시드 변경.txt", 'a')  # 변경해야됨
+    f.write("Seed: %d\n학습률: %0.4f\nEpoch: %d\n은닉층 깊이: %d\n은닉층 노드수: %d, %d\n옵티마이저: RMSprop\n\n"  # 옵티마이저 변경
             % (seed, learning_rate, num_epoch, hidden_depth, hidden1_size, hidden2_size))
 
     avg = 0
-    for i in range(100):
+    for i in range(100):  # 테스트 데이터 추가 시 변경
         print("예측값 : %d, 실제 값 : %d" % (pre_val[i], y1[i]))
         col1.extend(pre_val[i])
-        col2.extend(y1[i])  # 그래프 리스트에 결과값 추가
-        avg = avg + abs(y1[i] - pre_val[i]) / y1[i]  # 평균 오차율
+        col2.extend(y1[i])
+        avg = avg + abs(y1[i] - pre_val[i]) / y1[i]
 
     print("평균 오차율 : %0.2f %%" % avg)
-    f.write("loss 값 :%d 평균 오차율 : %0.2f %%" % (current_loss, avg))
+    f.write("loss 값 :%d\n평균 오차율 : %0.2f %%" % (current_loss, avg))
     f.write("\n----------------------------\n")
 
     f.close()
 
-    # 그래프 그리기 #
     plt.plot(row, col1, 'r', label='Predict')
     plt.plot(row, col2, 'b', label='Real')
     plt.legend()
