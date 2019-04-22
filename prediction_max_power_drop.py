@@ -7,7 +7,7 @@ from matplotlib import pyplot as plt
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 # 랜덤으로 정해도 시드를 정하면 어떤 시드의 가중치가 제일 좋은지 알 수 있음
-seed = 1
+seed = 77
 tf.set_random_seed(seed)
 
 x_data = pd.read_csv('./Train_X.csv')
@@ -23,7 +23,7 @@ label_test = y_test.as_matrix().astype('float32')
 
 
 # 초기값들 설정
-learning_rate = 0.0005
+learning_rate = 0.1
 num_epoch = 20000
 batch_size = 100
 display_step = 10
