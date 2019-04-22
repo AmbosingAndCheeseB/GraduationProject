@@ -7,7 +7,7 @@ from matplotlib import pyplot as plt
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 # 랜덤으로 정해도 시드를 정하면 어떤 시드의 가중치가 제일 좋은지 알 수 있음
-seed = 1
+seed = 77
 tf.set_random_seed(seed)
 
 x_data = pd.read_csv('./Train_X.csv')
@@ -23,8 +23,8 @@ label_test = y_test.as_matrix().astype('float32')
 
 
 # 초기값들 설정
-learning_rate = 0.0005
-num_epoch = 200
+learning_rate = 0.1
+num_epoch = 20000
 batch_size = 100
 display_step = 10
 hidden1_size = 5
@@ -80,7 +80,7 @@ with tf.Session() as sess:
         if ckpt and ckpt.model_checkpoint_path:
             saver.restore(sess, ckpt.model_checkpoint_path)
         else:
-            print("저장된 가중치 파라미터가 읍슴다")
+            print("저장된 가중치 파라미터가 없습니다.")
 
     for epoch in range(num_epoch):
         average_loss = 0
@@ -128,6 +128,6 @@ with tf.Session() as sess:
     plt.plot(row, col1, 'r', label='Predict')
     plt.plot(row, col2, 'b', label='Real')
     plt.legend()
-    plt.xlabel('Epoch')
+    plt.xlabel('Day')
     plt.ylabel('Value')
     plt.show()
