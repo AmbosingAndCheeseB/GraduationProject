@@ -77,7 +77,7 @@ with tf.Session() as sess:
         if ckpt and ckpt.model_checkpoint_path:
             saver.restore(sess, ckpt.model_checkpoint_path)
         else:
-            print("저장된 가중치 파라미터가 읍슴다")
+            print("저장된 가중치 파라미터가 없습니다.")
 
     for epoch in range(num_epoch):
         average_loss = 0
@@ -125,6 +125,6 @@ with tf.Session() as sess:
     plt.plot(row, col1, 'r', label='Predict')
     plt.plot(row, col2, 'b', label='Real')
     plt.legend()
-    plt.xlabel('Epoch')
+    plt.xlabel('Day')
     plt.ylabel('Value')
     plt.show()
