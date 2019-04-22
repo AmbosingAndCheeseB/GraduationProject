@@ -1,4 +1,4 @@
-﻿import tensorflow as tf
+import tensorflow as tf
 import numpy as np
 import pandas as pd
 import os
@@ -24,7 +24,7 @@ label_test = y_test.as_matrix().astype('float32')
 
 # 초기값들 설정
 learning_rate = 0.0005
-num_epoch = 200
+num_epoch = 10000
 batch_size = 100
 display_step = 10
 hidden1_size = 5
@@ -56,15 +56,15 @@ def model_ANN(x):
     b_out = tf.Variable(tf.random_normal(shape=[label.shape[1]]))
     logit = tf.matmul(H2_output, W_out) + b_out
 
-    return logit
+    return logit, W1, W2, W_out
 
 
-pre_value = model_ANN(x)
+pre_value, L2_W1, L2_W2, L2_W_out = model_ANN(x)
 
 loss = tf.reduce_mean(tf.square(y-pre_value))
 train = tf.train.RMSPropOptimizer(learning_rate=learning_rate).minimize(loss)
-regularization = tf.nn.l2_loss(lambda_reg)
-loss = tf.reduce_mean(loss + learning_rate*regularization)
+regularization = tf.nn.l2_loss(L2_W1) + tf.nn.l2_loss(L2_W2) + tf.nn.l2_loss(L2_W_out)
+loss = tf.reduce_mean(loss + lambda_reg*regularization)
 
 saver_dir = "pre_model"
 saver = tf.train.Saver()
