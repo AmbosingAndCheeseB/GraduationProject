@@ -6,11 +6,11 @@ from matplotlib import pyplot as plt
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-seed = 1
+seed = 7777
 tf.set_random_seed(seed)
 
-x_data = pd.read_csv('./Train_X.csv')
-y_data = pd.read_csv('./Train_Y.csv')
+x_data = pd.read_csv('./Pre_Train_X.csv')
+y_data = pd.read_csv('./Pre_Train_Y.csv')
 x_test = pd.read_csv('./Test_X.csv')
 y_test = pd.read_csv('./Test_Y.csv')
 
@@ -23,11 +23,11 @@ label_test = y_test.as_matrix().astype('float32')
 
 # 초기값들 설정
 learning_rate = 0.1
-num_epoch = 10000
+num_epoch = 10001
 batch_size = 100
 display_step = 10
-hidden1_size = 5
-hidden2_size = 5
+hidden1_size = 10
+hidden2_size = 3
 hidden_depth = 2
 
 dataset = tf.data.Dataset.from_tensor_slices((feature, label))
@@ -103,7 +103,7 @@ with tf.Session() as sess:
     col1 = []
     col2 = []
 
-    f = open("./학습 결과/시드 변경.txt", 'a')  # 변경해야됨
+    f = open("./학습 결과/냐냐냥.txt", 'a')  # 변경해야됨
     f.write("Seed: %d\n학습률: %0.4f\nEpoch: %d\n은닉층 깊이: %d\n은닉층 노드수: %d, %d\n옵티마이저: RMSprop\n\n"  # 옵티마이저 변경
             % (seed, learning_rate, num_epoch, hidden_depth, hidden1_size, hidden2_size))
 
