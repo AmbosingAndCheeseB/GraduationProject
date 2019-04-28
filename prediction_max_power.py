@@ -9,9 +9,9 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 seed = 7777
 tf.set_random_seed(seed)
 
-x_data = pd.read_csv('./Pre_Train_X.csv')
+x_data = pd.read_csv('./Train_X.csv')
 y_data = pd.read_csv('./Train_Y.csv')
-x_test = pd.read_csv('./Pre_Test_X.csv')
+x_test = pd.read_csv('./Test_X.csv')
 y_test = pd.read_csv('./Test_Y.csv')
 
 # date = pd.read_csv('./Test_date.csv')
