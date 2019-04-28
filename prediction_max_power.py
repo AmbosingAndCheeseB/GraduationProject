@@ -1,5 +1,4 @@
 import tensorflow as tf
-import numpy as np
 import pandas as pd
 import os
 from matplotlib import pyplot as plt
@@ -14,8 +13,15 @@ y_data = pd.read_csv('./Train_Y.csv')
 x_test = pd.read_csv('./Test_X.csv')
 y_test = pd.read_csv('./Test_Y.csv')
 
-# date = pd.read_csv('./Test_date.csv')
-# test_date = date.values.squeeze()
+date = pd.read_csv('./Test_date.csv')
+test_date = date.values.squeeze()
+
+axis = []
+n = 1
+for a in test_date:
+    if n % 10 == 1:
+        axis.append(a)
+    n += 1
 
 feature = x_data.as_matrix().astype('float32')
 label = y_data.as_matrix().astype('float32')
@@ -102,7 +108,6 @@ with tf.Session() as sess:
 
         pre_val, y1 = sess.run([pre_value, y], feed_dict={x: feature_test, y: label_test})
 
-    row = np.arange(1, 101)  # 테스트 데이터 추가 시 변경
     col1 = []
     col2 = []
 
@@ -111,7 +116,7 @@ with tf.Session() as sess:
             % (seed, learning_rate, num_epoch, hidden_depth, hidden1_size, hidden2_size))
 
     avg = 0
-    for i in range(100):  # 테스트 데이터 추가 시 변경
+    for i in range(118):  # 테스트 데이터 추가 시 변경
         print("예측값 : %d, 실제 값 : %d" % (pre_val[i], y1[i]))
         col1.extend(pre_val[i])
         col2.extend(y1[i])
@@ -123,9 +128,9 @@ with tf.Session() as sess:
 
     f.close()
 
-    plt.plot(row, col1, 'r', label='Predict')
-    plt.plot(row, col2, 'b', label='Real')
-    plt.legend()
-    plt.xlabel('Day')
-    plt.ylabel('Value')
-    plt.show()
+plt.plot(test_date, col1, 'r', label='Predict')
+plt.plot(test_date, col2, 'b', label='Real')
+plt.xticks(axis)
+plt.xlabel('Day')
+plt.ylabel('Value')
+plt.show()
