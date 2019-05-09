@@ -35,8 +35,8 @@ learning_rate = 0.1
 num_epoch = 10001
 batch_size = 100
 display_step = 10
-hidden1_size = 8
-hidden2_size = 6
+hidden1_size = 9
+hidden2_size = 5
 hidden_depth = 2
 
 dataset = tf.data.Dataset.from_tensor_slices((feature, label))
@@ -48,7 +48,6 @@ next_data = iterator.get_next()
 # 신경망 학습 데이터 변수 생성
 x = tf.placeholder(tf.float32, shape=[None, feature.shape[1]])
 y = tf.placeholder(tf.float32, shape=[None, label.shape[1]])
-
 
 
 # ANN 신경망 모델 구현
@@ -111,16 +110,18 @@ with tf.Session() as sess:
     col1 = []
     col2 = []
 
-    f = open("./학습 결과/기타 결과.txt", 'a')
+    f = open("./학습 결과/학습 결과.txt", 'a')
     f.write("Seed: %d\n학습률: %0.4f\nEpoch: %d\n은닉층 깊이: %d\n은닉층 노드수: %d, %d\n옵티마이저: RMSprop\n\n"
             % (seed, learning_rate, num_epoch, hidden_depth, hidden1_size, hidden2_size))
 
     avg = 0
-    for i in range(118):  # 테스트 데이터 추가 시 변경
+    for i in range(148):  # 테스트 데이터 추가 시 변경
         print("예측값 : %d, 실제 값 : %d" % (pre_val[i], y1[i]))
         col1.extend(pre_val[i])
         col2.extend(y1[i])
         avg = avg + abs(y1[i] - pre_val[i]) / y1[i]
+
+    avg = avg * 100 / 148
 
     print("평균 오차율 : %0.2f %%" % avg)
     f.write("loss 값 :%d\n평균 오차율 : %0.2f %%" % (current_loss, avg))
@@ -131,6 +132,7 @@ with tf.Session() as sess:
 plt.plot(test_date, col1, 'r', label='Predict')
 plt.plot(test_date, col2, 'b', label='Real')
 plt.xticks(axis)
+plt.legend()
 plt.xlabel('Day')
 plt.ylabel('Value')
 plt.show()
