@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
-
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -18,8 +17,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-    </FrameLayout>
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom|end" />
 
+    </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -34,9 +38,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:text="텍스트 인식" />
-
     </FrameLayout>
-
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -63,6 +65,5 @@
         </ScrollView>
 
     </FrameLayout>
-
 
 </LinearLayout>
