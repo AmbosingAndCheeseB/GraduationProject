@@ -3,6 +3,7 @@
   error_reporting(E_ALL);
   ini_set("display_errors", 1);
 
+
   $toeic = $_POST['toeic'];
   $toeic_split = explode('(', $toeic);
 
@@ -16,15 +17,13 @@
   $number3 = explode(')', $toeic_split[3]);
   $number4 = explode(')', $toeic_split[4]);
 
-  $number_1 = $number1[1];
-  $number_2 = $number2[1];
-  $number_3 = $number3[1];
-  $number_4 = $number4[1];
+  $sentence = $question."/".$number1[1]."/".$number2[1]."/".$number3[1]."/".$number4[1];
 
-  echo $question;
-  echo $number_1;
-  echo $number_2;
-  echo $number_3;
-  echo $number_4;
+  $py = 'C:\파이썬 실행파일 절대경로\python.exe';
+  $pysc = 'C:\파이썬 스크립트 파일 절대경로\toeic_bert.py --problem $sentence';
+  $cmd = "$py $pysc";
+
+  exec("$cmd $sentence", $out, $status);
+  echo $out[0];
 
 ?>

@@ -1,4 +1,4 @@
-package com.example.graduation;
+﻿package com.example.graduation;
 
 import android.Manifest;
 import android.content.ComponentName;
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         checkPermissions();
         initView();
 
-        url = "http://101.101.167.43:80/connect.php";
+        url = "http://server_example/connect.php";
     }
 
     private boolean checkPermissions() {
