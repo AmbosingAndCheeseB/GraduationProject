@@ -18,12 +18,13 @@
   $number4 = explode(')', $toeic_split[4]);
 
   $sentence = $question."/".$number1[1]."/".$number2[1]."/".$number3[1]."/".$number4[1];
+  $sentence = str_replace("\n", " ", $sentence);
 
   $py = 'C:\파이썬 실행파일 절대경로\python.exe';
-  $pysc = 'C:\파이썬 스크립트 파일 절대경로\toeic_bert.py --problem $sentence';
+  $pysc = 'C:\파이썬 스크립트 파일 절대경로\toeic_bert.py --problem "'.$sentence.'"';
   $cmd = "$py $pysc";
 
-  exec("$cmd $sentence", $out, $status);
+  exec("$cmd", $out, $status);
   echo $out[0];
 
 ?>
